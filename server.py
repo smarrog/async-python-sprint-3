@@ -291,11 +291,11 @@ class Server:
 
         self._send_message_to_all(f"User {user.user_name} was banned until {self._time_to_str(user.ban_until)}")
 
-    def _check_name(self, user_name: str) -> (bool, str, str):
+    def _check_name(self, user_name: str) -> tuple[bool, str, str]:
         user_name = user_name.strip()
 
-        if user_name == '' or user_name is None:
-            return False, user_name, "Empty names are restricted"
+        if user_name == "" or user_name is None:
+            return False, "", "Empty names are restricted"
 
         if " " in user_name:
             return False, user_name, "Empty spaces are restricted in names"
@@ -304,10 +304,10 @@ class Server:
             if user.user_name is not None and user.user_name == user_name:
                 return False, user_name, "Already have user with that name"
 
-        return True, user_name, None
+        return True, user_name, ""
 
     def _send_system_block_message(self, sender: UserData, block_name: str, data: list,
-                                   worker: Callable[[object], str] = None) -> None:
+                                   worker: Callable[[object], str] | None = None) -> None:
         rows: list[str] = [f"*** {block_name} ***\n"]
         if len(data) == 0:
             rows.append("EMPTY\n")
